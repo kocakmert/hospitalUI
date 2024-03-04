@@ -8,13 +8,11 @@ export function hospitalTypeComboMapper(response){
     }
 }
 
-
 export function hospitalNewRecord(formValues){
     debugger;
-    if(formValues.id === undefined){
+    if(formValues.id === undefined || formValues.id === null){
         const request = {
             hospital:{
-                
                 hospitalName : formValues.hospitalName,
                 hospitalAdress : formValues.hospitalAdress,
                 hospitalType : formValues.hospitalType
@@ -58,7 +56,7 @@ export function getHospitalRecord(response){
     }
 }
 
-export function deletehospitalRequest(id){
+export function deleteHospitalRequest(id){
     const request = {
         id: id
     }
@@ -75,11 +73,13 @@ function maptoStrHosptailType(hospitalType){
             strHospitalType = "Göz Hastanesi"
             break;
         case 3:
-            strHospitalType = "Genel Hastane "
+            strHospitalType = "Genel Hastane"
             break;
         case 4:
             strHospitalType = "Diğer"
             break;
+        default :
+            return strHospitalType;
     }
     return strHospitalType;
 }
@@ -99,6 +99,8 @@ function maptoNumberHosptailType(hospitalType){
         case "Diğer":
             numberHospitalType = 4
             break;
+        default : 
+            return numberHospitalType;
     }
     return numberHospitalType;
 }

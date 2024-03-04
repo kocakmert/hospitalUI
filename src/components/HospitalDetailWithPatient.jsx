@@ -1,235 +1,142 @@
 import React, { useState , useEffect  } from "react";
 import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/DeleteOutlined';
-import SaveIcon from '@mui/icons-material/Save';
-import CancelIcon from '@mui/icons-material/Close';
 import {
-  GridRowModes,
   DataGrid,
   GridToolbarContainer,
-  GridActionsCellItem,
-  GridRowEditStopReasons,
 } from '@mui/x-data-grid';
-import {
-  randomId,
-} from '@mui/x-data-grid-generator';
 import axios from 'axios';
-import { getHospitalRecord, deletehospitalRequest,hospitalNewRecord} from "../utils/HospitalMapper";
+import {getPatientRecord} from "../utils/PatientMapper"
+import {Link } from "react-router-dom";
 
 function EditToolbar(props) {
-  const { setRows, setRowModesModel } = props;
-
-  const handleClick = () => {
-    const id = randomId();
-    setRows((oldRows) => [...oldRows, { id, name: '', age: '', isNew: true }]);
-    setRowModesModel((oldModel) => ({
-      ...oldModel,
-      [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
-    }));
-  };
 
   return (
     <GridToolbarContainer>
-      <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
-        Add record
-      </Button>
+      <Link to="/patientDetailPage">
+        <Button color="primary">
+          Hasta Detay
+        </Button>
+      </Link>
     </GridToolbarContainer>
   );
 }
 
-export default function HospitalDetailWithPatient() {
-  const [rows, setRows] = React.useState([]);
-  const [rowModesModel, setRowModesModel] = React.useState({});
-
-  const handleRowEditStop = (params, event) => {
-    if (params.reason === GridRowEditStopReasons.rowFocusOut) {
-      event.defaultMuiPrevented = true;
-    }
-  };
-
-  const handleEditClick = (id) => () => {
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
-  };
-
-  const handleSaveClick = (id) => () => {
-    debugger;
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
-
-  };
-
-  const handleDeleteClick = (id) => () => {
-    setRows(rows.filter((row) => row.id !== id));
-    deleteHospitalRecord(id);
-
-  };
-
-  const handleCancelClick = (id) => () => {
-    setRowModesModel({
-      ...rowModesModel,
-      [id]: { mode: GridRowModes.View, ignoreModifications: true },
-    });
-
-    const editedRow = rows.find((row) => row.id === id);
-    if (editedRow.isNew) {
-      setRows(rows.filter((row) => row.id !== id));
-    }
-  };
-
-  const processRowUpdate = (newRow) => {
-    const updatedRow = { ...newRow, isNew: false };
-    setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-    updateHospitalRecord(updatedRow);
-    return updatedRow;
-  };
-
-  const handleRowModesModelChange = (newRowModesModel) => {
-    setRowModesModel(newRowModesModel);
-  };
-
-
+export default function HospitalDetailWithPatient(props) {
+  const [rows, setRows] = useState([]);
+  const [visibleTable, setVisibleTable] = useState(false);
   const rowSelected = (selectedRowKey) => {
     debugger;
   };
 
-  async function listHospitalRecord() {
-    axios
-      .get("http://localhost:8080/hospital/getAllHospital")
+  async function listHospitalRecord(hospitalId) {
+    axios.get(`http://localhost:8080/patient/getPatientByHospital/${hospitalId}`)
       .then((response) => {
-        setRows(getHospitalRecord(response.data.data));
+        debugger;
+        setRows(getPatientRecord(response.data.patientList));
+        if(response.data.patientList.length > 0){
+          setVisibleTable(true);
+        }
       })
       .catch((error) => {
         console.error(error);
       });
   }
 
-  async function deleteHospitalRecord(hospitalId) {
-    let request = deletehospitalRequest(hospitalId);
-    debugger;
-    axios
-      .post("http://localhost:8080/hospital/deleteHospital", request)
-      .then(function (response) {
-        debugger;
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }
-
-  async function updateHospitalRecord(newRecord) {
-    let request = hospitalNewRecord(newRecord);
-    debugger;
-    axios
-      .post("http://localhost:8080/hospital/addHospital", request)
-      .then(function (response) {
-        debugger;
-        console.log(response);
-      })
-      .catch(function (error) {
-        debugger
-        console.log(error);
-      });
-  }
-
-
   useEffect(() => {
-    listHospitalRecord();
-  }, [])
+    if(props.hospitalId !== undefined){
+      listHospitalRecord(props.hospitalId);
+    }
+  }, [props.hospitalId])
 
   const columns = [
     {
-      field: 'hospitalName',
-      headerName: 'Hastane Adı',
-      type: 'text',
-      width: 220,
-      align: 'left',
-      headerAlign: 'left',
-      editable: true,
+      field: "patientFirstName",
+      headerName: "Hasta Adı",
+      width: 150,
+      type: "text",
+      align: "left",
+      headerAlign: "left",
+      editable: false,
     },
     {
-      field: 'hospitalAdress',
-      headerName: 'Hastane Adresi',
-      type: 'text',
-      width: 180,
-      editable: true,
+      field: "patientLastName",
+      headerName: "Hasta Soyadı",
+      width: 150,
+      type: "text",
+      align: "left",
+      headerAlign: "left",
+      editable: false,
     },
     {
-      field: 'hospitalType',
-      headerName: 'Hastane Türü',
-      width: 220,
-      editable: true,
-      type: 'singleSelect',
-      valueOptions: ['Diş Hastanesi', 'Göz Hastanesi', 'Genel Hastane','Diğer'],
+      field: "patientGender",
+      headerName: "Hasta Cinsiyet",
+      type: "number",
+      align: "left",
+      width: 150,
+      headerAlign: "left",
+      editable: false,
     },
     {
-      field: 'actions',
-      type: 'actions',
-      headerName: 'Actions',
+      field: "patientAge",
+      headerName: "Hasta Yaşı",
+      type: "number",
+      align: "left",
+      headerAlign: "left",
+      editable: false,
+    },
+    {
+      field: "patientTc",
+      headerName: "Hasta TC",
+      type: "text",
+      align: "left",
+      headerAlign: "left",
       width: 100,
-      cellClassName: 'actions',
-      getActions: ({ id }) => {
-        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-
-        if (isInEditMode) {
-          return [
-            <GridActionsCellItem
-              icon={<SaveIcon />}
-              label="Save"
-              sx={{
-                color: 'primary.main',
-              }}
-              onClick={handleSaveClick(id)}
-            />,
-            <GridActionsCellItem
-              icon={<CancelIcon />}
-              label="Cancel"
-              className="textPrimary"
-              onClick={handleCancelClick(id)}
-              color="inherit"
-            />,
-          ];
-        }
-
-        return [
-          <GridActionsCellItem
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={handleEditClick(id)}
-            color="inherit"
-          />,
-          <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="Delete"
-            onClick={handleDeleteClick(id)}
-            color="inherit"
-          />,
-        ];
-      },
+      editable: false,
+    },
+    {
+      field: "patientAdress",
+      headerName: "Hasta Adresi",
+      width: 150,
+      type: "text",
+      editable: false,
+    },
+    {
+      field: "patientComplaint",
+      headerName: "Hasta Şikayeti",
+      type: "text",
+      width: 120,
+      editable: false,
+    },
+    {
+      field: "hospitalName",
+      headerName: "Hastane Adı",
+      align: "left",
+      type: "text",
+      width: 180,
+      editable: false,
+    },
+    {
+      field: "hospitalId",
+      headerName: "Hastane Id",
+      align: "left",
+      type: "number",
+      editable: false,
+      width: 80,
     },
   ];
 
   return (
+    visibleTable && (
     <div>
-
       <DataGrid item
         rows={rows}
         columns={columns}
         editMode="row"
-        rowModesModel={rowModesModel}
-        onRowModesModelChange={handleRowModesModelChange}
-        onRowEditStop={handleRowEditStop}
-        processRowUpdate={processRowUpdate}
         onRowSelectionModelChange={rowSelected}
         slots={{
           toolbar: EditToolbar,
         }}
-        slotProps={{
-          toolbar: { setRows, setRowModesModel },
-        }}
       />
-    </div>
+    </div>)
   );
 }

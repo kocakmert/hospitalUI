@@ -1,11 +1,26 @@
 import React from "react";
 import Navbar from "../components/Navbar";
-import HospitalDetail from "../components/HospitalDetail";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import HospitalDetailPage from "./HospitalDetailPage";
+import HospitalAddPage from "./HospitalAddPage";
+import PatientAddPage from "./PatientAddPage";
+import PatientDetailPage from "./PatientDetailPage";
+import { ToastContainer } from "react-toastify";
+
 export default function MainScreen() {
   return (
     <div >
+      <ToastContainer position="bottom-right"/>
+      <BrowserRouter>
       <Navbar/>
-      <HospitalDetail/>
+      <Routes>
+         <Route path="/" element={<HospitalDetailPage />}></Route>
+        <Route path="/hospitalAddPage" element={<HospitalAddPage />}></Route>
+        <Route path="/hospitalDetailPage" element={<HospitalDetailPage />}></Route>
+        <Route path="/patientDetailPage" element={<PatientDetailPage />}></Route>
+        <Route path="/patientAddPage" element={<PatientAddPage />}></Route>
+      </Routes>
+    </BrowserRouter>
     </div>
   );
 }

@@ -16,8 +16,8 @@ import { Grid } from "@mui/material";
 import axios from 'axios';
 import {hospitalComboMapper } from "../utils/HospitalMapper";
 import {patientNewRecord} from "../utils/PatientMapper"
-
-export default function Patient() {
+import { toast } from "react-toastify";
+export default function PatientAdd() {
 
   const initialValues = {
     patientFirstName: "",
@@ -26,7 +26,7 @@ export default function Patient() {
     patientAge : "",
     patientTc : "",
     patientAdress: "",
-    hospital: 3,
+    hospital: 5,
 };
 
 const [formValues, setFormValues] = useState(initialValues);
@@ -44,7 +44,6 @@ const handleSubmit = (event) => {
     event.preventDefault();
     console.log(formValues);
     let request = patientNewRecord(formValues);
-    debugger;
     addPatient(request);
 };
 
@@ -52,7 +51,7 @@ async function listHospitalCombo() {
     axios.get("http://localhost:8080/hospital/getAllHospital")
     .then((response) => {
       debugger;
-      setHospital(hospitalComboMapper(response.data.data));
+      setHospital(hospitalComboMapper(response.data.hospitalList));
     })
     .catch((error) => {
       console.error(error);
@@ -62,7 +61,11 @@ async function listHospitalCombo() {
 async function addPatient(request){
     axios.post('http://localhost:8080/patient/addPatient', request)
     .then(function (response) {
-      console.log(response);
+      if(response.data.success){
+        toast.success("Kayıt İşlemi Başarılı");
+      }else{
+        toast.error("Kayıt İşlemi yapılırken hata alındı" + response.data.message);
+      }
     })
     .catch(function (error) {
       console.log(error);

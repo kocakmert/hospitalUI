@@ -11,7 +11,7 @@ import Textarea from '@mui/joy/Textarea';
 import { Grid } from "@mui/material";
 import axios from 'axios';
 import { hospitalTypeComboMapper,hospitalNewRecord } from "../utils/HospitalMapper";
-
+import { toast } from "react-toastify";
 export default function Hospital() {
 
 
@@ -23,6 +23,7 @@ export default function Hospital() {
 
 const [formValues, setFormValues] = useState(initialValues);
 const [hospitalType , setHospitalType] = useState([]);
+const [isSuccess , setIsSuccess] = useState(false);
 
 const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -32,32 +33,40 @@ const handleInputChange = (e) => {
     });
 };
 
-
 const handleSubmit = (event) => {
-  debugger;
     event.preventDefault();
     console.log(formValues);
     let request = hospitalNewRecord(formValues);
-    debugger;
-    axios.post('http://localhost:8080/hospital/addHospital', request)
-    .then(function (response) {
-      debugger;
-      console.log(response);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+    addHospital(request);
 };
 
+async function addHospital(request){
+  axios.post('http://localhost:8080/hospital/addHospital', request)
+  .then(function (response) {
+    if(response.data.success){
+      toast.success("Kayıt İşlemi Başarılı");
+      setIsSuccess(true);
+    }else{
+      toast.error("Kayıt İşlemi yapılırken hata alındı" + response.data.message);
+    }
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
 
-useEffect(() => {
+async function listHospitalTypeCombo() {
   axios.get('http://localhost:8080/hospitalTypes/getHospitalTypeAll')
   .then(response => {
-    setHospitalType(hospitalTypeComboMapper(response.data.data));
+    setHospitalType(hospitalTypeComboMapper(response.data.hospitalTypeList));
   })
   .catch(error => {
     console.error(error);
   });
+}
+
+useEffect(() => {
+  listHospitalTypeCombo();
 }, [])
 
   return (

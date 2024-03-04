@@ -1,7 +1,6 @@
-import React, { useState , useEffect  } from "react";
+import React, {useEffect  } from "react";
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
@@ -13,28 +12,24 @@ import {
   GridActionsCellItem,
   GridRowEditStopReasons,
 } from '@mui/x-data-grid';
-import {
-  randomId,
-} from '@mui/x-data-grid-generator';
 import axios from 'axios';
-import { getHospitalRecord, deleteHospitalRequest,hospitalNewRecord} from "../utils/HospitalMapper";
-import HospitalDetailWithPatient from "./HospitalDetailWithPatient";
+import {getPatientRecord, deletePatientRequest, patientUpdateRecord} from "../utils/PatientMapper";
 import { toast } from "react-toastify";
 
 function EditToolbar() {
   return (
     <GridToolbarContainer>
-      <Button color="primary">
-        Hastane Detay Tablosu
+      <Button color="primary" >
+        Hasta Detay Tablosu
       </Button>
     </GridToolbarContainer>
   );
 }
 
-export default function HospitalDetail() {
-  const [rows, setRows] = useState([]);
-  const [rowModesModel, setRowModesModel] = useState({});
-  const [selectedHospital, setSelectedHospital] = useState();
+export default function PatientDetail() {
+  const [rows, setRows] = React.useState([]);
+  const [rowModesModel, setRowModesModel] = React.useState({});
+
   const handleRowEditStop = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
       event.defaultMuiPrevented = true;
@@ -48,7 +43,6 @@ export default function HospitalDetail() {
   const handleSaveClick = (id) => () => {
     debugger;
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
-
   };
 
   const handleDeleteClick = (id) => () => {
@@ -61,14 +55,12 @@ export default function HospitalDetail() {
       ...rowModesModel,
       [id]: { mode: GridRowModes.View, ignoreModifications: true },
     });
-    const editedRow = rows.find((row) => row.id === id);
   };
 
   const processRowUpdate = (newRow) => {
-    debugger;
-    const updatedRow = { ...newRow };
+    const updatedRow = { ...newRow};
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-    updateHospitalRecord(updatedRow);
+    updatePatientRecord(updatedRow);
     return updatedRow;
   };
 
@@ -77,49 +69,51 @@ export default function HospitalDetail() {
   };
 
   const rowSelected = (selectedRowKey) => {
-    setSelectedHospital(selectedRowKey[0]);
+    debugger;
   };
 
-  async function listHospitalRecord() {
+  async function listPatientRecord() {
     axios
-      .get("http://localhost:8080/hospital/getAllHospital")
+      .get("http://localhost:8080/patient/getAllPatient")
       .then((response) => {
-        setRows(getHospitalRecord(response.data.hospitalList));
+        setRows(getPatientRecord(response.data.patientList));
+        console.log(getPatientRecord(response.data.patientList));
+        debugger;
       })
       .catch((error) => {
         console.error(error);
       });
   }
 
-  async function deleteHospitalRecord(hospitalId) {
-    let request = deleteHospitalRequest(hospitalId);
+  async function deleteHospitalRecord(patientId) {
+    let request = deletePatientRequest(patientId);
+    debugger;
     axios
-      .post("http://localhost:8080/hospital/deleteHospital", request)
+      .post("http://localhost:8080/patient/deletePatient", request)
       .then(function (response) {
-        debugger;
         if(response.data.success){
-          toast.success("Silme İşlemi Başarılı");
-        }else{
-          toast.error("Silme İşlemi yapılırken hata alındı" + response.data.message);
-        }
+            toast.success("Silme İşlemi Başarılı");
+          }else{
+            toast.error("Silme İşlemi yapılırken hata alındı" + response.data.message);
+          }
       })
       .catch(function (error) {
         toast.error("Silme İşlemi yapılırken hata alındı" + error);
+        console.log(error);
       });
   }
 
-  async function updateHospitalRecord(newRecord) {
-    let request = hospitalNewRecord(newRecord);
+  async function updatePatientRecord(newRecord) {
+    let request = patientUpdateRecord(newRecord);
     debugger;
     axios
-      .post("http://localhost:8080/hospital/addHospital", request)
+      .post("http://localhost:8080/patient/addPatient", request)
       .then(function (response) {
         if(response.data.success){
-          toast.success("Kayıt İşlemi Başarılı");
-        }else{
-          toast.error("Kayıt İşlemi yapılırken hata alındı" + response.data.message);
-        }
-        console.log(response);
+            toast.success("Kayıt İşlemi Başarılı");
+          }else{
+            toast.error("Kayıt İşlemi yapılırken hata alındı" + response.data.message);
+          }
       })
       .catch(function (error) {
         toast.error("Kayıt İşlemi yapılırken hata alındı" + error);
@@ -128,40 +122,89 @@ export default function HospitalDetail() {
   }
 
   useEffect(() => {
-    listHospitalRecord();
-  }, [])
+    listPatientRecord();
+  }, []);
 
   const columns = [
     {
-      field: 'hospitalName',
-      headerName: 'Hastane Adı',
-      type: 'text',
-      width: 220,
-      align: 'left',
-      headerAlign: 'left',
+      field: "patientFirstName",
+      headerName: "Hasta Adı",
+      width: 150,
+      type: "text",
+      align: "left",
+      headerAlign: "left",
       editable: true,
     },
     {
-      field: 'hospitalAdress',
-      headerName: 'Hastane Adresi',
-      type: 'text',
-      width: 180,
+      field: "patientLastName",
+      headerName: "Hasta Soyadı",
+      width: 150,
+      type: "text",
+      align: "left",
+      headerAlign: "left",
       editable: true,
     },
     {
-      field: 'hospitalType',
-      headerName: 'Hastane Türü',
-      width: 220,
+      field: "patientGender",
+      headerName: "Hasta Cinsiyet",
+      type: "number",
+      align: "left",
+      width: 150,
+      headerAlign: "left",
       editable: true,
-      type: 'singleSelect',
-      valueOptions: ['Diş Hastanesi', 'Göz Hastanesi', 'Genel Hastane','Diğer'],
     },
     {
-      field: 'actions',
-      type: 'actions',
-      headerName: 'Actions',
+      field: "patientAge",
+      headerName: "Hasta Yaşı",
+      type: "number",
+      align: "left",
+      headerAlign: "left",
+      editable: true,
+    },
+    {
+      field: "patientTc",
+      headerName: "Hasta TC",
+      type: "text",
+      align: "left",
+      headerAlign: "left",
       width: 100,
-      cellClassName: 'actions',
+      editable: true,
+    },
+    {
+      field: "patientAdress",
+      headerName: "Hasta Adresi",
+      width: 150,
+      type: "text",
+      editable: true,
+    },
+    {
+      field: "patientComplaint",
+      headerName: "Hasta Şikayeti",
+      type: "text",
+      width: 120,
+      editable: true,
+    },
+    {
+      field: "hospitalName",
+      headerName: "Hastane Adı",
+      align: "left",
+      type: "text",
+      width: 180,
+    },
+    {
+      field: "hospitalId",
+      headerName: "Hastane Id",
+      align: "left",
+      type: "number",
+      editable: false,
+      width: 80,
+    },
+    {
+      field: "actions",
+      type: "actions",
+      headerName: "Actions",
+      width: 100,
+      cellClassName: "actions",
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
 
@@ -171,7 +214,7 @@ export default function HospitalDetail() {
               icon={<SaveIcon />}
               label="Save"
               sx={{
-                color: 'primary.main',
+                color: "primary.main",
               }}
               onClick={handleSaveClick(id)}
             />,
@@ -213,7 +256,7 @@ export default function HospitalDetail() {
           top: "50%",
           transform: "translate(-50%, -50%)",
           height: 500,
-          width: "55%",
+          width: "90%",
           "& .actions": {
             color: "text.secondary",
           },
@@ -222,7 +265,8 @@ export default function HospitalDetail() {
           },
         }}
       >
-        <DataGrid item
+        <DataGrid
+          item
           rows={rows}
           columns={columns}
           editMode="row"
@@ -236,9 +280,9 @@ export default function HospitalDetail() {
           }}
           slotProps={{
             toolbar: { setRows, setRowModesModel },
-          }} />
-          <br/>
-          <HospitalDetailWithPatient hospitalId={selectedHospital}/>
+          }}
+        />
+        <br />
       </Box>
     </div>
   );
