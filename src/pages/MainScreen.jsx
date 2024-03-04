@@ -20,7 +20,9 @@ export default function MainScreen() {
         <Route path="/patientDetailPage" element={<PatientDetailPage />}></Route>
         <Route path="/patientAddPage" element={<PatientAddPage />}></Route>
       </Routes>
+     
     </BrowserRouter>
+
     </div>
   );
 }

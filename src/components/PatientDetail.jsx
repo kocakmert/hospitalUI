@@ -147,7 +147,7 @@ export default function PatientDetail() {
     {
       field: "patientGender",
       headerName: "Hasta Cinsiyet",
-      type: "number",
+      type: "text",
       align: "left",
       width: 150,
       headerAlign: "left",

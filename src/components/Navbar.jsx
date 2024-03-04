@@ -20,7 +20,7 @@ function Navbar() {
             variant="h6"
             noWrap
             component="a"
-            href="/HospitalAddPage"
+            href="/hospitalDetailPage"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },

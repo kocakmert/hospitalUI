@@ -22,7 +22,7 @@ export function getPatientRecord(response){
             id : item.patientId,
             patientFirstName : item.patientFirstName,
             patientLastName : item.patientLastName ,
-            patientGender : item.patientGender,
+            patientGender : mapToGenderStr(item.patientGender),
             patientAge : item.patientAge,
             patientTc : item.patientTc ,
             patientAdress : item.patientAdress ,
@@ -59,4 +59,15 @@ export function patientUpdateRecord(item){
           },
         };
         return request;
+}
+
+function mapToGenderStr(params) {
+    debugger;
+    let gender = "";
+    if(params === 1){
+        gender = "Kadın";
+    }else if(params === 2){
+        gender = "Erkek";
+    }
+    return gender;
 }

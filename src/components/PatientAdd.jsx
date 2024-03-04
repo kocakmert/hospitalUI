@@ -11,6 +11,7 @@ import {
   Radio,
   Button
 } from '@mui/material';
+import Box from '@mui/material/Box';
 import Textarea from '@mui/joy/Textarea';
 import { Grid } from "@mui/material";
 import axios from 'axios';
@@ -26,6 +27,7 @@ export default function PatientAdd() {
     patientAge : "",
     patientTc : "",
     patientAdress: "",
+    patientComplaint : "",
     hospital: 5,
 };
 
@@ -43,8 +45,48 @@ const handleInputChange = (e) => {
 const handleSubmit = (event) => {
     event.preventDefault();
     console.log(formValues);
-    let request = patientNewRecord(formValues);
-    addPatient(request);
+    let controlTrue = controlFormValue(formValues);
+    if(controlTrue){
+      let request = patientNewRecord(formValues);
+      addPatient(request);
+    }
+};
+
+const controlFormValue = (formValues) => {
+  let controlValue = true;
+  debugger;
+  if(formValues.patientFirstName === null  || formValues.patientFirstName.trim() === '' ){
+     toast.info("Hasta Adı Boş Girilemez");
+     controlValue = false;
+  }
+  if(formValues.patientLastName === null  || formValues.patientLastName.trim() === '' ){
+    toast.info("Hasta Soyadı Boş Girilemez");
+    controlValue = false;
+  }
+  if(formValues.patientGender === null  || formValues.patientGender === '' ){
+    toast.info("Hasta Cinsiyeti  Boş Girilemez");
+    controlValue = false;
+  }
+  if(formValues.patientTc === null  || formValues.patientTc.trim() === '' ){
+    toast.info("Hasta TC  Boş Girilemez");
+    controlValue = false;
+  }else if (formValues.patientTc.length !== 11){
+    toast.info("Hastanın TC Numarası  11 Haneli Olmalı");
+    controlValue = false;
+  }
+  if(formValues.patientAge === null  || formValues.patientAge === 0 ){
+    toast.info("Hasta Yaşı  Boş Girilemez");
+    controlValue = false;
+  }
+  if(formValues.patientAdress === null  || formValues.patientAdress.trim() === '' ){
+    toast.info("Hasta Adresi  Boş Girilemez");
+    controlValue = false;
+  }
+  if(formValues.patientComplaint === null  || formValues.patientComplaint.trim() === '' ){
+    toast.info("Hasta Şikayeti  Boş Girilemez");
+    controlValue = false;
+  }
+  return controlValue;
 };
 
 async function listHospitalCombo() {
@@ -80,23 +122,26 @@ useEffect(() => {
     <div>
       <form onSubmit={handleSubmit}>
         <Grid container alignItems="center" justify="center" direction="column">
-          <h2>Hasta Kayıt Ekranı</h2>
+          <Box sx={{ p: 2, color: '#1976d2' }}> 
+          <h2>Hasta Kayıt Formu</h2>
+          </Box>
           <Grid item>
             <TextField
               id="patientFirstName"
               name="patientFirstName"
               label="Hasta Adı"
               type="text"
-              required
               value={formValues.patientFirstName}
               onChange={handleInputChange}
             />
             <TextField
+              sx={{
+                left : 20
+              }}
               id="patientLastName"
               name="patientLastName"
               label="Hasta Soyadı"
               type="text"
-              required
               value={formValues.patientLastName}
               onChange={handleInputChange}
             />
@@ -114,13 +159,13 @@ useEffect(() => {
               >
                 <FormControlLabel
                   key="female"
-                  value={0}
+                  value={1}
                   control={<Radio size="small" />}
                   label="Kadın"
                 />
                 <FormControlLabel
                   key="male"
-                  value={1}
+                  value={2}
                   control={<Radio size="small" />}
                   label="Erkek"
                 />
@@ -134,24 +179,25 @@ useEffect(() => {
               name="patientAge"
               label="Hasta Yaşı"
               type="number"
-              required
               value={formValues.patientAge}
               onChange={handleInputChange}
             />
             <TextField
+              sx={{
+                left : 20
+              }}
               id="patientTc"
               name="patientTc"
               label="Hasta TC"
               type="text"
-              required
               value={formValues.patientTc}
               onChange={handleInputChange}
             />
           </Grid>
 
           <br />
-          
           <br />
+          
           <Grid item>
             <Textarea
               id="patientAdress"
@@ -159,7 +205,10 @@ useEffect(() => {
               placeholder="Hasta Adresi"
               size="lg"
               type="text"
-              required
+              sx = {{
+                marginRight : 30,
+                width : "105%"
+              }}
               value={formValues.patientAdress}
               onChange={handleInputChange}
             />
@@ -167,12 +216,15 @@ useEffect(() => {
           <br />
           <Grid item>
             <Textarea
+              sx = {{
+              marginRight : 30,
+              width : "105%"
+               }}
               id="patientComplaint"
               name="patientComplaint"
               placeholder="Hasta Şikayeti"
               size="lg"
               type="text"
-              required
               value={formValues.patientComplaint}
               onChange={handleInputChange}
             />
@@ -186,6 +238,10 @@ useEffect(() => {
                 value={formValues.hospital}
                 onChange={handleInputChange}
                 label="Hastane İsmi"
+                sx = {{
+                  marginRight : 30,
+                  width : "105%"
+                   }}
               >
                 {hospitals.map((item) => (
                   <MenuItem key={item.key} value={item.key}>

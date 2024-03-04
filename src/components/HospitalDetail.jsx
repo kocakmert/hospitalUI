@@ -1,7 +1,6 @@
 import React, { useState , useEffect  } from "react";
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
@@ -13,9 +12,6 @@ import {
   GridActionsCellItem,
   GridRowEditStopReasons,
 } from '@mui/x-data-grid';
-import {
-  randomId,
-} from '@mui/x-data-grid-generator';
 import axios from 'axios';
 import { getHospitalRecord, deleteHospitalRequest,hospitalNewRecord} from "../utils/HospitalMapper";
 import HospitalDetailWithPatient from "./HospitalDetailWithPatient";
@@ -61,7 +57,6 @@ export default function HospitalDetail() {
       ...rowModesModel,
       [id]: { mode: GridRowModes.View, ignoreModifications: true },
     });
-    const editedRow = rows.find((row) => row.id === id);
   };
 
   const processRowUpdate = (newRow) => {
