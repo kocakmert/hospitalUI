@@ -61,28 +61,28 @@ const controlFormValue = (formValues) => {
 };
 
 async function addHospital(request){
-  axios.post('http://localhost:8080/hospital/addHospital', request)
-  .then(function (response) {
-    if(response.data.success){
+  try {
+    const response = await axios.post("http://localhost:8080/hospital/addHospital", request);
+    if (response.data.success) {
       toast.success("Kayıt İşlemi Başarılı");
-      navigate('/hospitalDetailPage');
-    }else{
-      toast.error("Kayıt İşlemi yapılırken hata alındı" + response.data.message);
+      navigate("/hospitalDetailPage");
+    } else {
+      toast.error(
+        "Kayıt İşlemi yapılırken hata alındı" + response.data.message
+      );
     }
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 async function listHospitalTypeCombo() {
-  axios.get('http://localhost:8080/hospitalTypes/getHospitalTypeAll')
-  .then(response => {
+  try {
+    const response = await axios.get('http://localhost:8080/hospitalTypes/getHospitalTypeAll');
     setHospitalType(hospitalTypeComboMapper(response.data.hospitalTypeList));
-  })
-  .catch(error => {
+  } catch (error) {
     console.error(error);
-  });
+  }
 }
 
 useEffect(() => {

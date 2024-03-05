@@ -28,18 +28,17 @@ export default function HospitalDetailWithPatient(props) {
   };
 
   async function listHospitalRecord(hospitalId) {
-    axios.get(`http://localhost:8080/patient/getPatientByHospital/${hospitalId}`)
-      .then((response) => {
-        setRows(getPatientRecord(response.data.patientList));
-        if(response.data.patientList.length > 0){
-          setVisibleTable(true);
-        }else{
-          setVisibleTable(false);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    try {
+      const response = await axios.get(`http://localhost:8080/patient/getPatientByHospital/${hospitalId}`);
+      setRows(getPatientRecord(response.data.patientList));
+      if (response.data.patientList.length > 0) {
+        setVisibleTable(true);
+      } else {
+        setVisibleTable(false);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   useEffect(() => {

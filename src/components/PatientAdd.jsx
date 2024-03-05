@@ -91,28 +91,28 @@ const controlFormValue = (formValues) => {
 };
 
 async function listHospitalCombo() {
-    axios.get("http://localhost:8080/hospital/getAllHospital")
-    .then((response) => {
-      setHospital(hospitalComboMapper(response.data.hospitalList));
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+  try {
+    const response = await axios.get("http://localhost:8080/hospital/getAllHospital");
+    setHospital(hospitalComboMapper(response.data.hospitalList));
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 async function addPatient(request){
-    axios.post('http://localhost:8080/patient/addPatient', request)
-    .then(function (response) {
-      if(response.data.success){
+    try {
+      const response = await axios.post("http://localhost:8080/patient/addPatient", request);
+      if (response.data.success) {
         toast.success("Kayıt İşlemi Başarılı");
-        navigate('/patientDetailPage');
-      }else{
-        toast.error("Kayıt İşlemi yapılırken hata alındı" + response.data.message);
+        navigate("/patientDetailPage");
+      } else {
+        toast.error(
+          "Kayıt İşlemi yapılırken hata alındı" + response.data.message
+        );
       }
-    })
-    .catch(function (error) {
+    } catch (error) {
       console.log(error);
-    });
+    }
 }
 
 useEffect(() => {

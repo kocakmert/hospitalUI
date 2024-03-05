@@ -74,48 +74,43 @@ export default function HospitalDetail() {
   };
 
   async function listHospitalRecord() {
-    axios
-      .get("http://localhost:8080/hospital/getAllHospital")
-      .then((response) => {
-        setRows(getHospitalRecord(response.data.hospitalList));
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    try {
+      const response = await axios.get("http://localhost:8080/hospital/getAllHospital");
+      setRows(getHospitalRecord(response.data.hospitalList));
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   async function deleteHospitalRecord(hospitalId) {
-    let request = deleteHospitalRequest(hospitalId);
-    axios
-      .post("http://localhost:8080/hospital/deleteHospital", request)
-      .then(function (response) {
-        if(response.data.success){
-          toast.success("Silme İşlemi Başarılı");
-        }else{
-          toast.error("Silme İşlemi yapılırken hata alındı" + response.data.message);
-        }
-      })
-      .catch(function (error) {
-        toast.error("Silme İşlemi yapılırken hata alındı" + error);
-      });
+    try {
+      let request = deleteHospitalRequest(hospitalId);
+      const response = await axios.post("http://localhost:8080/hospital/deleteHospital", request);
+      if(response.data.success){
+        toast.success("Silme İşlemi Başarılı");
+      }else{
+        toast.error("Silme İşlemi yapılırken hata alındı" + response.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Silme İşlemi yapılırken hata alındı" + error);
+    }
   }
 
   async function updateHospitalRecord(newRecord) {
-    let request = hospitalNewRecord(newRecord);
-    axios
-      .post("http://localhost:8080/hospital/addHospital", request)
-      .then(function (response) {
-        if(response.data.success){
-          toast.success("Kayıt İşlemi Başarılı");
-        }else{
-          toast.error("Kayıt İşlemi yapılırken hata alındı" + response.data.message);
-        }
-        console.log(response);
-      })
-      .catch(function (error) {
-        toast.error("Kayıt İşlemi yapılırken hata alındı" + error);
-        console.log(error);
-      });
+    try {
+      let request = hospitalNewRecord(newRecord);
+      const response = await axios.post("http://localhost:8080/hospital/addHospital", request);
+      if (response.data.success) {
+        toast.success("Güncelleme İşlemi Başarılı");
+      } else {
+        toast.error(
+          "Güncelleme İşlemi yapılırken hata alındı" + response.data.message
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   useEffect(() => {

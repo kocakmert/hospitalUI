@@ -92,7 +92,7 @@ function maptoNumberHosptailType(hospitalType){
         case "Göz Hastanesi" : 
             numberHospitalType = 2
             break;
-        case "Genel Hastane ":
+        case "Genel Hastane":
             numberHospitalType = 3
             break;
         case "Diğer":
