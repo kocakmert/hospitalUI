@@ -56,7 +56,6 @@ const handleSubmit = (event) => {
 
 const controlFormValue = (formValues) => {
   let controlValue = true;
-  debugger;
   if(formValues.patientFirstName === null  || formValues.patientFirstName.trim() === '' ){
      toast.info("Hasta Adı Boş Girilemez");
      controlValue = false;
@@ -94,7 +93,6 @@ const controlFormValue = (formValues) => {
 async function listHospitalCombo() {
     axios.get("http://localhost:8080/hospital/getAllHospital")
     .then((response) => {
-      debugger;
       setHospital(hospitalComboMapper(response.data.hospitalList));
     })
     .catch((error) => {

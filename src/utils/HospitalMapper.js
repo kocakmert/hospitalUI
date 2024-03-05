@@ -9,7 +9,6 @@ export function hospitalTypeComboMapper(response){
 }
 
 export function hospitalNewRecord(formValues){
-    debugger;
     if(formValues.id === undefined || formValues.id === null){
         const request = {
             hospital:{

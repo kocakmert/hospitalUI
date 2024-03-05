@@ -25,13 +25,11 @@ export default function HospitalDetailWithPatient(props) {
   const [rows, setRows] = useState([]);
   const [visibleTable, setVisibleTable] = useState(false);
   const rowSelected = (selectedRowKey) => {
-    debugger;
   };
 
   async function listHospitalRecord(hospitalId) {
     axios.get(`http://localhost:8080/patient/getPatientByHospital/${hospitalId}`)
       .then((response) => {
-        debugger;
         setRows(getPatientRecord(response.data.patientList));
         if(response.data.patientList.length > 0){
           setVisibleTable(true);

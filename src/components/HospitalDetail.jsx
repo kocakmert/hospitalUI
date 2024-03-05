@@ -42,7 +42,6 @@ export default function HospitalDetail() {
   };
 
   const handleSaveClick = (id) => () => {
-    debugger;
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
 
   };
@@ -60,7 +59,6 @@ export default function HospitalDetail() {
   };
 
   const processRowUpdate = (newRow) => {
-    debugger;
     const updatedRow = { ...newRow };
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
     updateHospitalRecord(updatedRow);
@@ -91,7 +89,6 @@ export default function HospitalDetail() {
     axios
       .post("http://localhost:8080/hospital/deleteHospital", request)
       .then(function (response) {
-        debugger;
         if(response.data.success){
           toast.success("Silme İşlemi Başarılı");
         }else{
@@ -105,7 +102,6 @@ export default function HospitalDetail() {
 
   async function updateHospitalRecord(newRecord) {
     let request = hospitalNewRecord(newRecord);
-    debugger;
     axios
       .post("http://localhost:8080/hospital/addHospital", request)
       .then(function (response) {

@@ -41,7 +41,6 @@ export default function PatientDetail() {
   };
 
   const handleSaveClick = (id) => () => {
-    debugger;
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
   };
 
@@ -69,7 +68,6 @@ export default function PatientDetail() {
   };
 
   const rowSelected = (selectedRowKey) => {
-    debugger;
   };
 
   async function listPatientRecord() {
@@ -86,7 +84,6 @@ export default function PatientDetail() {
 
   async function deleteHospitalRecord(patientId) {
     let request = deletePatientRequest(patientId);
-    debugger;
     axios
       .post("http://localhost:8080/patient/deletePatient", request)
       .then(function (response) {
@@ -104,7 +101,6 @@ export default function PatientDetail() {
 
   async function updatePatientRecord(newRecord) {
     let request = patientUpdateRecord(newRecord);
-    debugger;
     axios
       .post("http://localhost:8080/patient/addPatient", request)
       .then(function (response) {

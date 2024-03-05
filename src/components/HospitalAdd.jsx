@@ -53,7 +53,6 @@ const controlFormValue = (formValues) => {
     toast.info("Hastane Adresi  Boş Girilemez");
     controlValue = false;
   }
-  debugger;
   if(formValues.hospitalType === null  ){
     toast.info("Hastane Türü  Boş Girilemez");
     controlValue = false;
