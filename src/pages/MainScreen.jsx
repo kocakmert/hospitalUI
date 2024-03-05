@@ -5,6 +5,7 @@ import HospitalDetailPage from "./HospitalDetailPage";
 import HospitalAddPage from "./HospitalAddPage";
 import PatientAddPage from "./PatientAddPage";
 import PatientDetailPage from "./PatientDetailPage";
+import Footer from "../components/Footer"
 import { ToastContainer } from "react-toastify";
 
 export default function MainScreen() {
@@ -20,7 +21,7 @@ export default function MainScreen() {
         <Route path="/patientDetailPage" element={<PatientDetailPage />}></Route>
         <Route path="/patientAddPage" element={<PatientAddPage />}></Route>
       </Routes>
-     
+     <Footer/>
     </BrowserRouter>
 
     </div>

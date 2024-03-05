@@ -47,7 +47,7 @@ export function patientUpdateRecord(item){
             patientId: item.id,
             patientFirstName: item.patientFirstName,
             patientLastName: item.patientLastName,
-            patientGender: item.patientGender,
+            patientGender: mapStrToGenderInt(item.patientGender),
             patientAge: item.patientAge,
             patientTc: item.patientTc,
             patientAdress: item.patientAdress,
@@ -61,8 +61,17 @@ export function patientUpdateRecord(item){
         return request;
 }
 
+function mapStrToGenderInt(params){
+    let gender = 1;
+    if(params === "Kadın"){
+        gender = 1;
+    }else if(params === "Erkek"){
+        gender = 2;
+    }
+    return gender;
+}
+
 function mapToGenderStr(params) {
-    debugger;
     let gender = "";
     if(params === 1){
         gender = "Kadın";

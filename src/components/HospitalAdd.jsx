@@ -21,10 +21,9 @@ const initialValues = {
   hospitalType: "1",
 };
 
-const navigate = useNavigate()
+const navigate = useNavigate();
 const [formValues, setFormValues] = useState(initialValues);
 const [hospitalType , setHospitalType] = useState([]);
-const [isSuccess , setIsSuccess] = useState(false);
 
 const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -166,7 +165,7 @@ useEffect(() => {
                 margin: "5px",
               }}
             >
-              Submit
+              Kaydet
             </Button>
           </Grid>
         </Grid>

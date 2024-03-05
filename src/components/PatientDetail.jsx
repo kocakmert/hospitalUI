@@ -78,7 +78,6 @@ export default function PatientDetail() {
       .then((response) => {
         setRows(getPatientRecord(response.data.patientList));
         console.log(getPatientRecord(response.data.patientList));
-        debugger;
       })
       .catch((error) => {
         console.error(error);
@@ -145,13 +144,13 @@ export default function PatientDetail() {
       editable: true,
     },
     {
-      field: "patientGender",
-      headerName: "Hasta Cinsiyet",
-      type: "text",
+      field: 'patientGender',
+      headerName: 'Hasta Cinsiyet',
       align: "left",
       width: 150,
-      headerAlign: "left",
       editable: true,
+      type: 'singleSelect',
+      valueOptions: ['Erkek', 'Kadın'],
     },
     {
       field: "patientAge",

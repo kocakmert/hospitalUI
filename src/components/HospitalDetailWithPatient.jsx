@@ -35,6 +35,8 @@ export default function HospitalDetailWithPatient(props) {
         setRows(getPatientRecord(response.data.patientList));
         if(response.data.patientList.length > 0){
           setVisibleTable(true);
+        }else{
+          setVisibleTable(false);
         }
       })
       .catch((error) => {

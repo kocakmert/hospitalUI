@@ -18,6 +18,7 @@ import axios from 'axios';
 import {hospitalComboMapper } from "../utils/HospitalMapper";
 import {patientNewRecord} from "../utils/PatientMapper"
 import { toast } from "react-toastify";
+import  {useNavigate}  from 'react-router-dom';
 export default function PatientAdd() {
 
   const initialValues = {
@@ -31,6 +32,7 @@ export default function PatientAdd() {
     hospital: 5,
 };
 
+const navigate = useNavigate();
 const [formValues, setFormValues] = useState(initialValues);
 const [hospitals , setHospital] = useState([]);
 
@@ -105,6 +107,7 @@ async function addPatient(request){
     .then(function (response) {
       if(response.data.success){
         toast.success("Kayıt İşlemi Başarılı");
+        navigate('/patientDetailPage');
       }else{
         toast.error("Kayıt İşlemi yapılırken hata alındı" + response.data.message);
       }
@@ -194,10 +197,7 @@ useEffect(() => {
               onChange={handleInputChange}
             />
           </Grid>
-
-          <br />
-          <br />
-          
+          <br /> 
           <Grid item>
             <Textarea
               id="patientAdress"
@@ -251,7 +251,6 @@ useEffect(() => {
               </Select>
             </FormControl>
           </Grid>
-          <br/>
           <Grid item>
             <Button
               variant="contained"
@@ -262,7 +261,7 @@ useEffect(() => {
                 margin: "5px",
               }}
             >
-              Submit
+              Kaydet
             </Button>
           </Grid>
         </Grid>
