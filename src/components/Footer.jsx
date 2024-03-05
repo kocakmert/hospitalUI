@@ -6,7 +6,7 @@ export default function Footer() {
     <div >
     <footer className="footer">
     <div className="footer-content">
-       Writted By | Koçak Mert Güçgötüren 
+       Writed By | Koçak Mert Güçgötüren 
       </div>
     </footer>
     </div>

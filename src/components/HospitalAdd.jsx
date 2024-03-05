@@ -94,7 +94,7 @@ useEffect(() => {
       <form onSubmit={handleSubmit}>
         <Grid container alignItems="center" justify="center" direction="column" >
         <Box sx={{ p: 2, color: '#1976d2' }}> 
-          <h2>Hasta Kayıt Formu</h2>
+          <h2>Hastane Kayıt Formu</h2>
           </Box>
           <Grid item >
             <TextField
